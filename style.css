@@ -1,0 +1,132 @@
+/* RESET */
+
+html {
+    margin: 0;
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #232323;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+p {
+    margin: 0;
+    padding-top: 8px;
+}
+
+/* Header */
+
+#header {
+    height: 25%;
+    min-height: 175px;
+    min-width: 480px;
+    background-color: #3C76AE;
+    color: white;
+    text-transform: uppercase;
+}
+
+#header h1{
+    margin-top: 0;
+    padding: 10px;
+    padding-top: 15px;
+    line-height: 1.25;
+    text-align: center;
+    font-size: 2em;
+    font-weight: 300;
+}
+
+#colorDisplay {
+    font-size: 1.75em;
+}
+
+/* Menu */
+#menu-bg {
+    height: 5%;
+    min-height: 25px;
+    background-color: white;
+}
+
+.menu-flex-container {
+    max-width: 630px;
+    height: 100%;
+    display: flex;
+    margin: 0 auto;
+    justify-content: space-between;
+}
+
+#message {
+    text-transform: uppercase;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+}
+
+button {
+    height: 100%;
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: none;
+    color: #3C76AE;
+    background-color: white;
+}
+
+button:hover, .selected {
+    color: white;
+    background-color: #3C76AE;
+}
+
+
+#container {
+    max-width: 800px;
+    height: calc(70% - 20px);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: flex-start;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+.square {
+    width: 200px;
+    height: 200px;
+    margin: 10px;
+    background-color: #232323;
+    border-radius: 25px;
+    transition: background 0.6s;
+	-webkit-transition: background 0.6s;
+	-moz-transition: background 0.6s;
+}
+
+.square:hover {
+    cursor: grab;
+}
+
+@media (max-width: 800px) {
+    .menu-flex-container{
+        max-width: 580px;
+    }
+    .square {
+        width: 180px;
+        height: 180px;
+    }
+}
+
+/* media max-width = (square width * 3)+(square margin*6)+(container padding*2) */
+@media (max-width: 620px) {
+    #menu-bg .menu-flex-container{
+        max-width: 450px; /* 580 */
+    }
+    p {
+        padding-top: 6px;
+    }
+}
+
+/* media max-width = (square width * 3)+(square margin*6)+(container padding*2) - 1px */
