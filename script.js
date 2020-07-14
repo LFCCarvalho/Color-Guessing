@@ -115,7 +115,7 @@ function updateWrongFeedbackMessage(){
 
 function updateClearFeedbackMessage(){
     var feedbackMessage = getMessageElement();
-    feedbackMessage.textContent = "";
+    feedbackMessage.textContent = " ";
 }
 
 function updateAllElementsBackgroundColor(color){

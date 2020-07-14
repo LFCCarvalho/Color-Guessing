@@ -16,6 +16,7 @@ body {
 p {
     margin: 0;
     padding-top: 8px;
+    color: black;
 }
 
 /* Header */
@@ -152,6 +153,9 @@ button:hover, .selected {
 }
 
 @media (max-width: 360px){
+    #header {
+        min-height: 90px;
+    }
     #header h1 {
         min-width: 300px;
         font-size: 1.25em;
