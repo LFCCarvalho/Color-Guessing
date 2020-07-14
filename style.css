@@ -46,7 +46,7 @@ p {
 /* Menu */
 #menu-bg {
     height: 5%;
-    min-height: 25px;
+    min-height: 30px;
     background-color: white;
 }
 
@@ -127,6 +127,42 @@ button:hover, .selected {
     p {
         padding-top: 6px;
     }
+}
+
+@media (max-width: 480px){
+    #header {
+        min-width: 360px;
+        min-height: 125px;
+    }
+    #colorDisplay {
+        font-size: 1.5em;
+    }
+    #header h1 {
+        min-width: 300px;
+        font-size: 1.5em;
+    }
+    #message {
+        letter-spacing: initial;
+    }
+    .square {
+        height: 160px;
+        width: 160px;
+        margin: 5px;
+    }
+}
+
+@media (max-width: 360px){
+    #header h1 {
+        min-width: 300px;
+        font-size: 1.25em;
+    }
+    #colorDisplay {
+        font-size: 1.25em;
+    }
+    #menu-bg .menu-flex-container{
+        min-width: 360px;
+    }
+    
 }
 
 /* media max-width = (square width * 3)+(square margin*6)+(container padding*2) - 1px */
