@@ -45,7 +45,6 @@ function showSecondLine() {
 }
 
 function showSquare(square) {
-    console.log(square);
     square.style.display = "block";
 }
 
@@ -71,7 +70,6 @@ function getDisplayedElements(js_nodeList) {
 function styleSquareRandomRGB(domElement) {
     var colors = generateRandomRGB();
     domElement.style.backgroundColor = 'rgb(' + colors.red + ', ' + colors.blue + ', ' + colors.green + ')';
-    console.log(domElement.style.backgroundColor);
 }
 
 function generateRandomRGB() {
@@ -161,8 +159,6 @@ function addAllSquareEventListeners(correctColor){
 }
 
 function checkSquareColor(correctColor){
-    console.log(this.style.backgroundColor);
-    console.log(correctColor);
     if(correctColor == this.style.backgroundColor) {
        updateAndFinishGame(correctColor);
     } else{
