@@ -205,9 +205,6 @@ function restartGame(){
     startGame();
 }
 
-//TODO criar event listeners para os botões e linkar com as funções
-//TODO criar event listeners dos squares
-
 /* Control flow */
 function updateAndFinishGame(correctColor){
     updateRightFeedbackMessage();
