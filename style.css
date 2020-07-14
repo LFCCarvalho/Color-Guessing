@@ -92,7 +92,7 @@ button:hover, .selected {
     justify-content: center;
     align-content: flex-start;
     margin: 0 auto;
-    padding: 10px;
+    padding: 5px;
 }
 
 .square {
@@ -154,19 +154,24 @@ button:hover, .selected {
 
 @media (max-width: 360px){
     #header {
+        height: 110px;
         min-height: 90px;
     }
     #header h1 {
         min-width: 300px;
-        font-size: 1.25em;
+        font-size: 1.3em;
     }
     #colorDisplay {
-        font-size: 1.25em;
+        font-size: 1.3em;
     }
     #menu-bg .menu-flex-container{
         min-width: 360px;
     }
-    
+    .square{
+        height: 150px;
+        width: 150px;
+        margin: 5px;
+    }
 }
 
 /* media max-width = (square width * 3)+(square margin*6)+(container padding*2) - 1px */
