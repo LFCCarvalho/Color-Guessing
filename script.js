@@ -9,9 +9,9 @@ function changeSelected() {
 
 function recreateGridAfterChange() {
     if (retrieveSelected() == "easy") {
-        hideSecondLine();
-    } else {
-        showSecondLine();
+        createNSquaresAndAppendToContainer(3);
+    } else if(retrieveSelected() == "hard"){
+        createNSquaresAndAppendToContainer(6);
     }
     styleGridRandomRGB();
     updateRestartTextPlaying();
@@ -22,49 +22,34 @@ function retrieveSelected() {
     return selected.id;
 }
 
-function hideSecondLine() {
-    var bothLines = document.querySelectorAll(".square");
-    bothLines.forEach(function (element, i) {
-        if (i >= 3) { //3 elements per line
-            hideSquare(element);
-        }
-    });
+function createNSquaresAndAppendToContainer(num) {
+    var container = document.querySelector("#container");
+    for(let i = 0; i < num; i++){
+        container.appendChild(getNewSquare());
+    }
 }
 
-function hideSquare(square) {
-    square.style.display = "none";
+function getNewSquare() {
+    var square = document.createElement("div");
+    square.classList.add("square");
+    return square;
 }
 
-function showSecondLine() {
-    var bothLines = document.querySelectorAll(".square");
-    bothLines.forEach(function (element, i) {
-        if (i >= 3) { //3 elements per line
-            showSquare(element);
-        }
-    });
-}
-
-function showSquare(square) {
-    square.style.display = "block";
+function removeAllSquares() {
+    var squares = getAllSquares();
+    for(let i = 0; i < squares.length; i++){
+        squares[i].parentNode.removeChild(squares[i]);
+    }
 }
 
 /* Color Update*/
 
 function styleGridRandomRGB() {
-    var squares = document.querySelectorAll(".square");
-    var displayedSquares = getDisplayedElements(squares);
+    var squares = getAllSquares();
 
-    for (let i = 0; i < displayedSquares.length; i++) {
-        styleSquareRandomRGB(displayedSquares[i]);
+    for (let i = 0; i < squares.length; i++) {
+        styleSquareRandomRGB(squares[i]);
     }
-}
-
-function getDisplayedElements(js_nodeList) {
-    var filtered = [].filter.call(js_nodeList, function (domElement) {
-        var style = window.getComputedStyle(domElement);
-        return (style.display != 'none');
-    });
-    return filtered;
 }
 
 function styleSquareRandomRGB(domElement) {
@@ -95,37 +80,53 @@ function styleSquareDefaultRGB(element) {
 
 /* Color Picking */
 function chooseMainColor() {
-    var desiredElements = document.querySelectorAll(".square");
-    var displayedElements = getDisplayedElements(desiredElements);
-    var chosenSquare = randomInt(0, displayedElements.length - 1);
-    return displayedElements[chosenSquare].style.backgroundColor;
+    var squares = getAllSquares();
+    var chosenSquare = randomInt(0, squares.length - 1);
+    return squares[chosenSquare].style.backgroundColor;
+}
+
+/* Common query functions */
+
+function getAllSquares(){
+    return document.querySelectorAll(".square");
 }
 
 /* Update elements */
+function updateHeaderToDefaultColor(){
+    var query = document.querySelector("#header");
+    query.style.backgroundColor = "#3C76AE";
+}
+
+function getMessageElement(){
+    return document.querySelector("#message");
+}
 
 function updateRightFeedbackMessage(){
-    var feedbackMessage = document.querySelector("#message");
+    var feedbackMessage = getMessageElement();
     feedbackMessage.textContent = "Correct!";
     feedbackMessage.style.color = "#65ED95";
 }
 
 function updateWrongFeedbackMessage(){
-    var feedbackMessage = document.querySelector("#message");
+    var feedbackMessage = getMessageElement();
     feedbackMessage.textContent = "Try again...";
     feedbackMessage.style.color = "red";
 }
 
 function updateClearFeedbackMessage(){
-    var feedbackMessage = document.querySelector("#message");
+    var feedbackMessage = getMessageElement();
     feedbackMessage.textContent = "";
 }
 
 function updateAllElementsBackgroundColor(color){
-    var query = document.querySelectorAll(".square, #header");
-    var displayedElements = getDisplayedElements(query);
-    for(let i = 0; i < displayedElements.length; i++){
-        styleSquarePassedRGB(displayedElements[i], color);
+    var allElements = document.querySelectorAll(".square, #header");
+    for(let i = 0; i < allElements.length; i++){
+        styleSquarePassedRGB(allElements[i], color);
     }
+}
+
+function getRestartElement(){
+    return document.querySelector("#restart");
 }
 
 function updateRestartTextPlaying() {
@@ -140,21 +141,19 @@ function updateRestartTextFinished() {
 
 /* Event Listeners */
 function removeAllSquareEventListeners(){
-    var desiredElements = document.querySelectorAll(".square");
-    var displayedSquares = getDisplayedElements(desiredElements);
+    var squares = getAllSquares();
 
-    for(let i = 0; i < displayedSquares.length; i++){
-        displayedSquares[i].removeEventListener('click', displayedSquares[i].eventObject);
+    for(let i = 0; i < squares.length; i++){
+        squares[i].removeEventListener('click', squares[i].eventObject);
     }
 }
 
 function addAllSquareEventListeners(correctColor){
-    var desiredElements = document.querySelectorAll(".square");
-    var displayedSquares = getDisplayedElements(desiredElements);
+    let squares = getAllSquares();
 
-    for(let i = 0; i < displayedSquares.length; i++){
-        displayedSquares[i].addEventListener('click', 
-                                            displayedSquares[i].eventObject = checkSquareColor.bind(displayedSquares[i], correctColor));
+    for(let i = 0; i < squares.length; i++){
+        squares[i].addEventListener(
+            'click', squares[i].eventObject = checkSquareColor.bind(squares[i], correctColor));
     }
 }
 
@@ -167,18 +166,19 @@ function checkSquareColor(correctColor){
 }
 
 function addButtonListeners(){
-    var restartButton = document.querySelector("#restart");
+    let restartButton = document.querySelector("#restart");
     restartButton.addEventListener('click', restartGame);
 
-    var easyButton = document.querySelector("#easy");
+    let easyButton = document.querySelector("#easy");
     easyButton.addEventListener('click', easyGame);
     
-    var hardButton = document.querySelector("#hard");
+    let hardButton = document.querySelector("#hard");
     hardButton.addEventListener('click', hardGame);
 }
 
 function restartGame(){
     removeAllSquareEventListeners();
+    removeAllSquares();
     startGame();
 }
 
@@ -196,11 +196,6 @@ function hardGame(){
     }
 }
 
-function restartGame(){
-    removeAllSquareEventListeners();
-    startGame();
-}
-
 /* Control flow */
 function updateAndFinishGame(correctColor){
     updateRightFeedbackMessage();
@@ -214,6 +209,7 @@ function updateAndContinueGame(wrongElement){
 };
 
 function startGame(){
+    updateHeaderToDefaultColor();
     updateClearFeedbackMessage();
     recreateGridAfterChange(); 
     var mainColor = chooseMainColor();
