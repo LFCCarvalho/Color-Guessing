@@ -1,51 +1,49 @@
-/* Mode difficulty */
-function changeSelected() {
-    var toChange = document.querySelectorAll(".mode");
-    toChange.forEach(function (element) {
-        element.classList.toggle("selected");
-    });
-    recreateGridAfterChange();
+function gameInit() {
+    buildGame();
+    addButtonListeners();
 }
 
-function recreateGridAfterChange() {
+gameInit();
+
+function buildGame() {
+    createAndStyleGrid();
+    updatePageTextAndColorsToDefault();
+
+    let mainColor = chooseMainColor();
+    updateColorDisplayText(mainColor);
+    addAllSquareEventListeners(mainColor);
+}
+
+/* Start grid creation and styling */
+function createAndStyleGrid() {
     if (retrieveSelected() == "easy") {
         createNSquaresAndAppendToContainer(3);
-    } else if(retrieveSelected() == "hard"){
+    } else if (retrieveSelected() == "hard") {
         createNSquaresAndAppendToContainer(6);
     }
     styleGridRandomRGB();
-    updateRestartTextPlaying();
 }
 
 function retrieveSelected() {
-    var selected = document.querySelector(".selected");
+    let selected = document.querySelector(".selected");
     return selected.id;
 }
 
 function createNSquaresAndAppendToContainer(num) {
-    var container = document.querySelector("#container");
-    for(let i = 0; i < num; i++){
+    let container = document.querySelector("#container");
+    for (let i = 0; i < num; i++) {
         container.appendChild(getNewSquare());
     }
 }
 
 function getNewSquare() {
-    var square = document.createElement("div");
+    let square = document.createElement("div");
     square.classList.add("square");
     return square;
 }
 
-function removeAllSquares() {
-    var squares = getAllSquares();
-    for(let i = 0; i < squares.length; i++){
-        squares[i].parentNode.removeChild(squares[i]);
-    }
-}
-
-/* Color Update*/
-
 function styleGridRandomRGB() {
-    var squares = getAllSquares();
+    let squares = getAllSquares();
 
     for (let i = 0; i < squares.length; i++) {
         styleSquareRandomRGB(squares[i]);
@@ -53,12 +51,12 @@ function styleGridRandomRGB() {
 }
 
 function styleSquareRandomRGB(domElement) {
-    var colors = generateRandomRGB();
+    let colors = generateRandomRGB();
     domElement.style.backgroundColor = 'rgb(' + colors.red + ', ' + colors.blue + ', ' + colors.green + ')';
 }
 
 function generateRandomRGB() {
-    var color = {};
+    let color = {};
     color.red = randomInt(0, 255);
     color.blue = randomInt(0, 255);
     color.green = randomInt(0, 255);
@@ -69,154 +67,181 @@ function generateRandomRGB() {
 function randomInt(min, max) {
     return min + Math.floor((max - min) * Math.random());
 }
+/* End grid creation and styling */
 
-function styleSquarePassedRGB(element, color){
-    element.style.backgroundColor = color;
+/* Start update page and text colors to default */
+function updatePageTextAndColorsToDefault() {
+    updateHeaderToDefaultColor();
+    updateClearFeedbackMessage();
+    updateRestartTextPlaying();
 }
 
-function styleSquareDefaultRGB(element) {
-    element.style.backgroundColor = "#232323";
-}
-
-/* Color Picking */
-function chooseMainColor() {
-    var squares = getAllSquares();
-    var chosenSquare = randomInt(0, squares.length - 1);
-    return squares[chosenSquare].style.backgroundColor;
-}
-
-/* Common query functions */
-
-function getAllSquares(){
-    return document.querySelectorAll(".square");
-}
-
-/* Update elements */
-function updateHeaderToDefaultColor(){
-    var query = document.querySelector("#header");
+function updateHeaderToDefaultColor() {
+    let query = document.querySelector("#header");
     query.style.backgroundColor = "#3C76AE";
 }
 
-function getMessageElement(){
-    return document.querySelector("#message");
-}
-
-function updateRightFeedbackMessage(){
-    var feedbackMessage = getMessageElement();
-    feedbackMessage.textContent = "Correct!";
-    feedbackMessage.style.color = "#65ED95";
-}
-
-function updateWrongFeedbackMessage(){
-    var feedbackMessage = getMessageElement();
-    feedbackMessage.textContent = "Try again...";
-    feedbackMessage.style.color = "red";
-}
-
-function updateClearFeedbackMessage(){
-    var feedbackMessage = getMessageElement();
+function updateClearFeedbackMessage() {
+    let feedbackMessage = getMessageElement();
     feedbackMessage.textContent = " ";
 }
 
-function updateAllElementsBackgroundColor(color){
-    var allElements = document.querySelectorAll(".square, #header");
-    for(let i = 0; i < allElements.length; i++){
-        styleSquarePassedRGB(allElements[i], color);
-    }
-}
-
-function getRestartElement(){
-    return document.querySelector("#restart");
+function getMessageElement() {
+    return document.querySelector("#message");
 }
 
 function updateRestartTextPlaying() {
-    var query = document.querySelector("#restart");
+    let query = getRestartElement();
     query.textContent = "New colors";
 }
 
-function updateRestartTextFinished() {
-    var query = document.querySelector("#restart");
-    query.textContent = "Play again?"
+function getRestartElement() {
+    return document.querySelector("#restart");
+}
+/* End update page and text colors to default */
+
+/* Start choose main color*/
+function chooseMainColor() {
+    let squares = getAllSquares();
+    let chosenSquare = randomInt(0, squares.length - 1);
+    return squares[chosenSquare].style.backgroundColor;
 }
 
-/* Event Listeners */
-function removeAllSquareEventListeners(){
-    var squares = getAllSquares();
+function getAllSquares() {
+    return document.querySelectorAll(".square");
+}
+/* End choose main color */
 
-    for(let i = 0; i < squares.length; i++){
-        squares[i].removeEventListener('click', squares[i].eventObject);
-    }
+/* Start update color display text */
+function updateColorDisplayText(mainColor) {
+    let colorDisplay = getColorDisplay();
+    colorDisplay.textContent = mainColor;
 }
 
-function addAllSquareEventListeners(correctColor){
+function getColorDisplay() {
+    return document.querySelector("#colorDisplay");
+}
+/* End update color display text */
+
+/* Start add all square event listeners*/
+function addAllSquareEventListeners(correctColor) {
     let squares = getAllSquares();
 
-    for(let i = 0; i < squares.length; i++){
+    for (let i = 0; i < squares.length; i++) {
         squares[i].addEventListener(
+            // The bind function recreate the listener, so eventObject property is necessary if you 
+            // want to remove the listener later
             'click', squares[i].eventObject = checkSquareColor.bind(squares[i], correctColor));
     }
 }
 
-function checkSquareColor(correctColor){
-    if(correctColor == this.style.backgroundColor) {
-       updateAndFinishGame(correctColor);
-    } else{
+function checkSquareColor(correctColor) {
+    if (correctColor == this.style.backgroundColor) {
+        updateAndFinishGame(correctColor);
+    } else {
         updateAndContinueGame(this);
     }
 }
-
-function addButtonListeners(){
-    let restartButton = document.querySelector("#restart");
-    restartButton.addEventListener('click', restartGame);
-
-    let easyButton = document.querySelector("#easy");
-    easyButton.addEventListener('click', easyGame);
-    
-    let hardButton = document.querySelector("#hard");
-    hardButton.addEventListener('click', hardGame);
-}
-
-function restartGame(){
-    removeAllSquareEventListeners();
-    removeAllSquares();
-    startGame();
-}
-
-function easyGame(){
-    if(retrieveSelected() == "hard"){
-        changeSelected();
-        restartGame();
-    }
-}
-
-function hardGame(){
-    if(retrieveSelected() == "easy"){
-        changeSelected();
-        restartGame();
-    }
-}
-
-/* Control flow */
-function updateAndFinishGame(correctColor){
+// Start update and finish game
+function updateAndFinishGame(correctColor) {
     updateRightFeedbackMessage();
     updateAllElementsBackgroundColor(correctColor);
     updateRestartTextFinished();
 }
 
-function updateAndContinueGame(wrongElement){
+function updateRightFeedbackMessage() {
+    let feedbackMessage = getMessageElement();
+    feedbackMessage.textContent = "Correct!";
+    feedbackMessage.style.color = "#65ED95";
+}
+
+function updateAllElementsBackgroundColor(color) {
+    let allElements = document.querySelectorAll(".square, #header");
+    for (let i = 0; i < allElements.length; i++) {
+        styleSquarePassedRGB(allElements[i], color);
+    }
+}
+
+function styleSquarePassedRGB(element, color) {
+    element.style.backgroundColor = color;
+}
+
+function updateRestartTextFinished() {
+    let query = getRestartElement();
+    query.textContent = "Play again?"
+}
+// End update and finish game
+
+// Start update and continue game
+function updateAndContinueGame(wrongElement) {
     styleSquareDefaultRGB(wrongElement);
     updateWrongFeedbackMessage();
 };
 
-function startGame(){
-    updateHeaderToDefaultColor();
-    updateClearFeedbackMessage();
-    recreateGridAfterChange(); 
-    var mainColor = chooseMainColor();
-    var colorDisplay = document.querySelector("#colorDisplay");
-    colorDisplay.textContent = mainColor;
-    addAllSquareEventListeners(mainColor);
+function styleSquareDefaultRGB(element) {
+    element.style.backgroundColor = "#232323";
 }
 
-addButtonListeners();
-startGame();
+function updateWrongFeedbackMessage() {
+    let feedbackMessage = getMessageElement();
+    feedbackMessage.textContent = "Try again...";
+    feedbackMessage.style.color = "red";
+}
+// End update and continue game
+
+/* End add all square event listeners */
+
+/* Start add button listeners */
+function addButtonListeners() {
+    let easyButton = document.querySelector("#easy");
+    easyButton.addEventListener('click', easyGame);
+
+    let hardButton = document.querySelector("#hard");
+    hardButton.addEventListener('click', hardGame);
+
+    let restartButton = document.querySelector("#restart");
+    restartButton.addEventListener('click', restartGame);
+}
+
+function easyGame() {
+    if (retrieveSelected() == "hard") {
+        toggleSelected();
+        restartGame();
+    }
+}
+
+function hardGame() {
+    if (retrieveSelected() == "easy") {
+        toggleSelected();
+        restartGame();
+    }
+}
+
+function toggleSelected() {
+    let toChange = document.querySelectorAll(".mode");
+    toChange.forEach(function (element) {
+        element.classList.toggle("selected");
+    });
+}
+
+function restartGame() {
+    removeAllSquareEventListeners();
+    removeAllSquares();
+    buildGame();
+}
+
+function removeAllSquareEventListeners() {
+    let squares = getAllSquares();
+    for (let i = 0; i < squares.length; i++) {
+        squares[i].removeEventListener('click', squares[i].eventObject);
+    }
+}
+
+function removeAllSquares() {
+    let squares = getAllSquares();
+    for (let i = 0; i < squares.length; i++) {
+        squares[i].parentNode.removeChild(squares[i]);
+    }
+}
+
+/* End add button listeners */
