@@ -76,6 +76,7 @@ button {
     border: none;
     color: #3C76AE;
     background-color: white;
+    transition: all 0.4s;
 }
 
 button:hover, .selected {
